@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_precache_test/enums/enum_image.dart';
@@ -7,25 +9,46 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  void refresh() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.primaries[Random().nextInt(Colors.primaries.length - 1)],
+        appBarTheme: Theme.of(context).appBarTheme.copyWith(
+              elevation: 0.0,
+              foregroundColor: Colors.white,
+            ),
       ),
-      home: const MyHomePage(title: '이미지 캐싱 테스트'),
+      home: MyHomePage(
+        title: '이미지 캐싱 테스트',
+        refresh: refresh,
+      ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({
+    super.key,
+    required this.title,
+    required this.refresh,
+  });
 
   final String title;
+  final VoidCallback refresh;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -35,6 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
   EnumImage enumImage = EnumImage.lightSizeImage;
 
   void changeEnumImage() {
+    widget.refresh();
     imageCache.clear();
     const values = EnumImage.values;
     final int currentIndex = values.indexWhere((e) => e.ko == enumImage.ko);

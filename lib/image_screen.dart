@@ -20,7 +20,7 @@ class _ImageScreenState extends State<ImageScreen> {
   @override
   void initState() {
     super.initState();
-    imageCache.maximumSizeBytes = 1000000000;
+    imageCache.maximumSizeBytes = 1024 * 1024 * 2000;
   }
 
   @override
